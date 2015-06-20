@@ -1,0 +1,14 @@
+{
+  "name": "chp4",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "~3.2.0",
+    "modernizr": "~2.8.2",
+    "ember": "~1.13.2",
+    "handlebars": "~3.0.3"
+  },
+  "devDependencies": {
+    "chai": "~3.0.0",
+    "mocha": "~2.2.5"
+  }
+}
