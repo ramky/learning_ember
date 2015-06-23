@@ -19,7 +19,8 @@ module.exports = function (grunt) {
   // Configurable paths
   var config = {
     app: 'app',
-    dist: 'dist'
+    dist: 'dist',
+    yeoman_app: require('./bower.json').appPath || 'app'
   };
 
   // Define the configuration for all the tasks
@@ -28,8 +29,27 @@ module.exports = function (grunt) {
     // Project settings
     config: config,
 
+    // Ember templates
+    emberTemplates: {
+      compile: {
+        options: {
+          templateNamespace: 'Handlebars',
+          templateName: function(sourceFile) {
+            return sourceFile.replace(/app\/templates\//, '');
+          }
+        },
+        files: {
+          "<%= config.yeoman_app %>/scripts/templates.js": ["<%= config.yeoman_app %>/templates/**/*.handlebars"]
+        }
+      }
+    },
+
     // Watches files for changes and runs tasks based on the changed files
     watch: {
+      emberTemplates: {
+        files: '<%= config.yeoman_app %>/templates/**/*.handlebars',
+        tasks: ['emberTemplates', 'livereload']
+      },
       bower: {
         files: ['bower.json'],
         tasks: ['wiredep']
@@ -345,6 +365,7 @@ module.exports = function (grunt) {
     }
   });
 
+  grunt.loadNpmTasks('grunt-ember-templates');
 
   grunt.registerTask('serve', 'start the server and preview your app, --allow-remote for remote access', function (target) {
     if (grunt.option('allow-remote')) {
@@ -356,6 +377,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'emberTemplates', //for ember templates
       'wiredep',
       'concurrent:server',
       'autoprefixer',
@@ -402,6 +424,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', [
     'newer:jshint',
+    'emberTemplates',
     'test',
     'build'
   ]);
